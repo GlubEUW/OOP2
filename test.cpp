@@ -45,11 +45,21 @@ int main() {
     pq.push(80, 3);
     cout << "Size before clear: " << pq.size() << endl;
 
+    myNamespace::PriorityQueue pq2 = pq;
     pq.clear();
     cout << "Size after clear (expected 0): " << pq.size() << endl;
     cout << "Empty after clear (expected true): " << (pq.empty() ? "true" : "false") << endl;
 
+
+    cout << "Size after clear (expected 0): " << pq2.size() << endl;
+    cout << "Empty after clear (expected true): " << (pq2.empty() ? "true" : "false") << endl;
+ 
+
+
     cout << "\nAll tests completed.\n";
+
+    pq+={1, 1};
+    cout << pq.top();
 
     return 0;
 }
