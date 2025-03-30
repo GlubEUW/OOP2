@@ -1,3 +1,4 @@
+// Mindaugas Kalvinskas 2 gr. 1 pgr. 2 IND prioritetine eile
 #ifndef PRIORITYQ_H
 #define PRIORITYQ_H
 
@@ -30,6 +31,8 @@ public:
     void pop();
     void clear();
     int operator[](int value) const;
+    bool operator<(const PriorityQueue& other) const;
+    bool operator==(const PriorityQueue& other) const;
 private:
     class Impl;
     std::unique_ptr<Impl> pImpl;

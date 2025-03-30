@@ -74,21 +74,105 @@ public:
         delete temp;
         count--;
     }
-    int findValue(int weight) const {
+    int findByWeight(int weight) const {
         Node* current = head;
+        int i = 0;
         while (current != nullptr) {
             if (current->weight == weight) {
-                return current->value;
+                return i;
             }
+            ++i;
             current = current->next;
         }
         return -1;
     }
+    bool updateValueByWeight(int weight, int newValue) {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->weight == weight) {
+                current->value = newValue;
+                return true;
+            }
+            current = current->next;
+        }
+        return false;  // Weight not found
+    }
+    
     void clear() {
         while (!empty()) {
             pop();
         }
     }
+
+    
+bool operator<(const Impl& other) const {
+    if (empty() && !other.empty()) {
+        return true;
+    }
+    if (!empty() && other.empty()) {
+        return false;
+    }
+    if (empty() && other.empty()) {
+        return false;  // Equal, not less than
+    }
+    
+    if (size() < other.size()) {
+        return true;
+    }
+    if (size() > other.size()) {
+        return false;
+    }
+    
+    Node* thisCurrent = head;
+    Node* otherCurrent = other.head;
+    
+    while (thisCurrent != nullptr && otherCurrent != nullptr) {
+        if (thisCurrent->weight < otherCurrent->weight) {
+            return true;
+        }
+        if (thisCurrent->weight > otherCurrent->weight) {
+            return false;
+        }
+        
+        if (thisCurrent->value < otherCurrent->value) {
+            return true;
+        }
+        if (thisCurrent->value > otherCurrent->value) {
+            return false;
+        }
+        
+        thisCurrent = thisCurrent->next;
+        otherCurrent = otherCurrent->next;
+    }
+    return false;
+}
+
+
+bool operator==(const Impl& other) const {
+    if (size() != other.size()) {
+        return false;
+    }
+    
+    if (empty() && other.empty()) {
+        return true;
+    }
+    
+    Node* thisCurrent = head;
+    Node* otherCurrent = other.head;
+    
+    while (thisCurrent != nullptr && otherCurrent != nullptr) {
+        if (thisCurrent->weight != otherCurrent->weight || 
+            thisCurrent->value != otherCurrent->value) {
+            return false;
+        }
+        
+        thisCurrent = thisCurrent->next;
+        otherCurrent = otherCurrent->next;
+    }
+    
+    return true;
+}
+
 };
 
 PriorityQueue::PriorityQueue() : pImpl(std::make_unique<Impl>()) {}
@@ -127,10 +211,20 @@ PriorityQueue& PriorityQueue::operator-=(int) {
 void PriorityQueue::operator!(){
     clear();
 }
-int PriorityQueue::operator[](int value) const {
-    return pImpl->findValue(value);
+int PriorityQueue::operator[](int weight) const {
+    return pImpl->findByWeight(weight);
 }
-PriorityQueue& PriorityQueue::operator<<(const std::pair<int, int>& p){
-    //FIXME
+PriorityQueue& PriorityQueue::operator<<(const std::pair<int, int>& pair) {
+    pImpl->updateValueByWeight(pair.second, pair.first);
+    return *this;
 }
+bool PriorityQueue::operator<(const PriorityQueue& other) const {
+    return *pImpl < *other.pImpl;
+}
+
+bool PriorityQueue::operator==(const PriorityQueue& other) const {
+    return *pImpl == *other.pImpl;
+}
+
+
 }
