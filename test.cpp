@@ -4,8 +4,8 @@
 using namespace std;
 
 int main() {
-    PriorityQueue pq;
-
+    myNamespace::PriorityQueue pq;
+    
     cout << "Testing Priority Queue Implementation\n";
     cout << "-------------------------------------\n";
 
