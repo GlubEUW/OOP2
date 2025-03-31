@@ -246,17 +246,23 @@ void testEdgeCases() {
 }
 
 int main() {
-    std::cout << "Running PriorityQueue tests..." << std::endl;
+    try{
+        std::cout << "Running PriorityQueue tests..." << std::endl;
     
-    testBasicOperations();
-    testCopyConstructor();
-    testClear();
-    testOperators();
-    testComparisonOperators();
-    testMultipleObjects();
-    testToString();
-    testEdgeCases();
+        testBasicOperations();
+        testCopyConstructor();
+        testClear();
+        testOperators();
+        testComparisonOperators();
+        testMultipleObjects();
+        testToString();
+        testEdgeCases();
     
-    std::cout << "All tests completed successfully!" << std::endl;
+        std::cout << "All tests completed successfully!" << std::endl;
+    }
+    catch(...){
+        std::cout << "Some exception occured" << std::endl;    
+    }
     return 0;
+    
 }

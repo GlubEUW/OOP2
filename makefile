@@ -22,10 +22,10 @@ $(DEMO_BIN): PriorityQ.o PriorityQDemo.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 test: $(TEST_BIN)
-	./$(TEST_BIN) > $(TEST_LOG)
+	./$(TEST_BIN) > $(TEST_LOG) 2>&1
 
 demo: $(DEMO_BIN)
-	./$(DEMO_BIN) > $(DEMO_LOG)
+	./$(DEMO_BIN) > $(DEMO_LOG) 2>&1
 
 run: test demo
 
