@@ -281,7 +281,7 @@ bool PriorityQueue::operator==(const PriorityQueue& other) const {
     return *pImpl == *other.pImpl;
 }
 bool PriorityQueue::operator!=(const PriorityQueue& other) const {
-    return !(*pImpl == *other.pImpl);
+    return (*pImpl == *other.pImpl);
 }
 
 bool PriorityQueue::operator>(const PriorityQueue& other) const {
