@@ -1,65 +1,262 @@
 #include "PriorityQ.h"
 #include <iostream>
+#include <cassert>
+#include <algorithm>
 
-using namespace std;
+using namespace myNamespace;
 
-int main() {
-    myNamespace::PriorityQueue pq;
+void printTestResult(const std::string& testName, bool passed) {
+    std::cout << testName << ": " << (passed ? "PASSED" : "FAILED") << std::endl;
+}
+
+void testBasicOperations() {
+    PriorityQueue pq;
     
-    cout << "Testing Priority Queue Implementation\n";
-    cout << "-------------------------------------\n";
-
-    // Test empty queue
-    cout << "Empty queue test: " << (pq.empty() ? "PASS" : "FAIL") << endl;
-    cout << "Size test (expected 0): " << pq.size() << endl;
-
-    // Push elements
-    cout << "\nPushing elements...\n";
-    pq.push(10, 2);
+    assert(pq.empty());
+    assert(pq.size() == 0);
+    printTestResult("Empty queue tests", true);
+    
+    pq.push(10, 5);
+    assert(!pq.empty());
+    assert(pq.size() == 1);
+    assert(pq.top() == 10);
+    assert(pq.topWeight() == 5);
+    printTestResult("Push and top tests", true);
+    
+    pq.push(20, 8);
+    assert(pq.size() == 2);
+    assert(pq.top() == 20);
+    assert(pq.topWeight() == 8);
+    
     pq.push(30, 3);
-    pq.push(20, 1);
-    pq.push(40, 5);
-    pq.push(50, 2);
+    assert(pq.size() == 3);
+    assert(pq.top() == 20);
+    printTestResult("Priority ordering tests", true);
+    
+    pq.pop();
+    assert(pq.size() == 2);
+    assert(pq.top() == 10);
+    pq.pop();
+    assert(pq.size() == 1);
+    assert(pq.top() == 30);
+    pq.pop();
+    assert(pq.empty());
+    printTestResult("Pop tests", true);
+    
+    bool exceptionThrown = false;
+    try {
+        pq.top();
+    } catch (const EmptyQueueException&) {
+        exceptionThrown = true;
+    }
+    assert(exceptionThrown);
+    
+    exceptionThrown = false;
+    try {
+        pq.pop();
+    } catch (const EmptyQueueException&) {
+        exceptionThrown = true;
+    }
+    assert(exceptionThrown);
+    printTestResult("Exception tests", true);
+}
 
-    cout << "Empty queue test after pushing (expected false): " << (pq.empty() ? "true" : "false") << endl;
-    cout << "Size test (expected 5): " << pq.size() << endl;
+void testCopyConstructor() {
+    PriorityQueue pq1;
+    pq1.push(10, 5);
+    pq1.push(20, 8);
+    pq1.push(30, 3);
+    
+    PriorityQueue pq2(pq1);
+    assert(pq2.size() == 3);
+    assert(pq2.top() == 20);
+    
+    pq2.pop();
+    assert(pq2.size() == 2);
+    assert(pq2.top() == 10);
+    assert(pq1.size() == 3);
+    assert(pq1.top() == 20);
+    
+    printTestResult("Copy constructor tests", true);
+}
 
-    // Test top element
-    cout << "\nTop element test (expected 40): " << pq.top() << endl;
-    cout << "Top weight test (expected 5): " << pq.topWeight() << endl;
+void testClear() {
+    PriorityQueue pq;
+    pq.push(10, 5);
+    pq.push(20, 8);
+    
+    pq.clear();
+    assert(pq.empty());
+    assert(pq.size() == 0);
+    
+    printTestResult("Clear tests", true);
+}
 
-    // Pop all elements and display
-    cout << "\nPopping all elements in priority order:\n";
-    cout << "Value\tWeight\n";
-    cout << "-----\t------\n";
+void testOperators() {
+    PriorityQueue pq;
+    
+    pq += std::make_pair(10, 5);
+    assert(pq.size() == 1);
+    assert(pq.top() == 10);
+    
+    pq -= 0;
+    assert(pq.empty());
+    
+    pq.push(10, 5);
+    pq.push(20, 8);
+    
+    !pq;
+    assert(pq.empty());
+    
+    pq.push(10, 5);
+    pq.push(20, 8);
+    pq.push(30, 3);
+    
+    assert(pq[20] == 0);
+    assert(pq[10] == 1);
+    assert(pq[30] == 2);
+    assert(pq[40] == -1);
+    
+    pq << std::make_pair(99, 8);
+    assert(pq.top() == 99);
+    
+    printTestResult("Operator overload tests", true);
+}
 
-    while (!pq.empty()) {
-        cout << pq.top() << "\t" << pq.topWeight() << endl;
+
+void testComparisonOperators() {
+    PriorityQueue pq1;
+    PriorityQueue pq2;
+    
+    assert(pq1 == pq2);
+    assert(!(pq1 < pq2));
+    assert(pq1 <= pq2);
+    assert(pq1 >= pq2);
+    
+    pq1.push(10, 5);
+    assert(!(pq1 == pq2));
+    assert(!(pq1 < pq2));
+    assert(!(pq1 <= pq2));
+    assert(pq1 > pq2);
+    assert(pq1 >= pq2);
+    
+    pq2.push(10, 5);
+    assert(pq1 == pq2);
+    
+    pq1.push(20, 8);
+    assert(!(pq1 < pq2));
+    assert(!(pq1 <= pq2));
+    assert(pq1 > pq2);
+    assert(pq1 >= pq2);
+    
+    pq2.push(30, 8);
+    assert(pq1 < pq2);
+    assert(pq1 <= pq2);
+    assert(!(pq1 > pq2));
+    assert(!(pq1 >= pq2));
+    
+    printTestResult("Comparison operator tests", true);
+}
+
+void testMultipleObjects() {
+    const int numQueues = 5;
+    PriorityQueue queues[numQueues];
+    
+    for (int i = 0; i < numQueues; i++) {
+        for (int j = 0; j < 3; j++) {
+            queues[i].push(i * 10 + j, 5 - j);
+        }
+    }
+    
+    for (int i = 0; i < numQueues; i++) {
+        assert(queues[i].size() == 3);
+        assert(queues[i].top() == i * 10); // Highest priority value should be i*10
+    }
+    
+    for (int i = 0; i < numQueues - 1; i++) {
+        for (int j = 0; j < numQueues - i - 1; j++) {
+            if (queues[j] > queues[j + 1]) {
+                PriorityQueue temp = queues[j];
+                queues[j] = queues[j + 1];
+                queues[j + 1] = temp;
+            }
+        }
+    }
+    
+    for (int i = 1; i < numQueues; i++) {
+        assert(queues[i-1] <= queues[i]);
+    }
+    
+    printTestResult("Multiple objects tests", true);
+}
+
+void testToString() {
+    PriorityQueue pq;
+    
+    std::string emptyStr = pq.ToString();
+    assert(emptyStr == "Empty Queue");
+    
+    pq.push(10, 5);
+    pq.push(20, 8);
+    pq.push(30, 3);
+    
+    std::string str = pq.ToString();
+    assert(str.find("PriorityQueue:") != std::string::npos);
+    assert(str.find("[20:8]") != std::string::npos);
+    assert(str.find("[10:5]") != std::string::npos);
+    assert(str.find("[30:3]") != std::string::npos);
+    
+    printTestResult("ToString tests", true);
+}
+
+void testEdgeCases() {
+    PriorityQueue pq;
+    
+    pq.push(10, 5);
+    pq.push(20, 5);
+    pq.push(30, 5);
+    
+    assert(pq.top() == 10);
+    pq.pop();
+    assert(pq.top() == 20);
+    pq.pop();
+    assert(pq.top() == 30);
+    
+    bool updated = (pq << std::make_pair(99, 10)).size() > 0;
+    assert(pq.top() == 30);
+    
+    pq.clear();
+    const int numElements = 1000;
+    for (int i = 0; i < numElements; i++) {
+        pq.push(i, numElements - i);
+    }
+    
+    assert(pq.size() == numElements);
+    assert(pq.top() == 0);
+    
+
+    for (int i = 0; i < numElements; i++) {
+        assert(pq.top() == i);
         pq.pop();
     }
+    
+    assert(pq.empty());
+    
+    printTestResult("Edge case tests", true);
+}
 
-    // Test clear
-    cout << "\nPushing more elements...\n";
-    pq.push(60, 1);
-    pq.push(70, 4);
-    pq.push(80, 3);
-    cout << "Size before clear: " << pq.size() << endl;
-
-    myNamespace::PriorityQueue pq2 = pq;
-    pq.clear();
-    cout << "Size after clear (expected 0): " << pq.size() << endl;
-    cout << "Empty after clear (expected true): " << (pq.empty() ? "true" : "false") << endl;
-
-
-    cout << "Size after clear (expected 0): " << pq2.size() << endl;
-    cout << "Empty after clear (expected true): " << (pq2.empty() ? "true" : "false") << endl;
- 
-
-
-    cout << "\nAll tests completed.\n";
-
-    pq+={1, 1};
-    cout << pq.top();
-
+int main() {
+    std::cout << "Running PriorityQueue tests..." << std::endl;
+    
+    testBasicOperations();
+    testCopyConstructor();
+    testClear();
+    testOperators();
+    testComparisonOperators();
+    testMultipleObjects();
+    testToString();
+    testEdgeCases();
+    
+    std::cout << "All tests completed successfully!" << std::endl;
     return 0;
 }
