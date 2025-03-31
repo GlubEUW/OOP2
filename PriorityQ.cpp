@@ -3,6 +3,15 @@
 
 namespace myNamespace {
 
+    class EmptyQueueException : public std::exception {
+        public:
+            const char* what() const noexcept override{
+                return "Priority queue is empty";
+            }
+        };
+
+
+    
 class PriorityQueue::Impl {
 private:
     struct Node {
@@ -53,10 +62,15 @@ public:
         }
         count++;
     }
-
-    
-    
-
+    void pop(){
+        if (empty()){
+            throw EmptyQueueException();
+        }
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        count--;
+    }
     int top() const{
         if (empty()) {
             throw EmptyQueueException();
@@ -69,16 +83,6 @@ public:
             throw EmptyQueueException();
         }
         return head->weight;
-    }
-
-    void pop(){
-        if (empty()){
-            throw EmptyQueueException();
-        }
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-        count--;
     }
     int findByValue(int value) const{
         Node* current = head;
@@ -189,7 +193,7 @@ bool operator==(const Impl& other) const{
     
     return true;
 }
-std::string ToString() const {
+std::string toString() const {
     std::stringstream ss;
     
     if (empty()) {
@@ -266,15 +270,18 @@ PriorityQueue& PriorityQueue::operator<<(const std::pair<int, int>& pair) {
     pImpl->updateValueByWeight(pair.second, pair.first);
     return *this;
 }
+bool PriorityQueue::operator<=(const PriorityQueue& other) const {
+    return (*pImpl < *other.pImpl) || (*pImpl == *other.pImpl);
+}
+
 bool PriorityQueue::operator<(const PriorityQueue& other) const {
     return *pImpl < *other.pImpl;
 }
-
 bool PriorityQueue::operator==(const PriorityQueue& other) const {
     return *pImpl == *other.pImpl;
 }
-bool PriorityQueue::operator<=(const PriorityQueue& other) const {
-    return (*pImpl < *other.pImpl) || (*pImpl == *other.pImpl);
+bool PriorityQueue::operator!=(const PriorityQueue& other) const {
+    return !(*pImpl == *other.pImpl);
 }
 
 bool PriorityQueue::operator>(const PriorityQueue& other) const {
@@ -284,7 +291,7 @@ bool PriorityQueue::operator>(const PriorityQueue& other) const {
 bool PriorityQueue::operator>=(const PriorityQueue& other) const {
     return !(*pImpl < *other.pImpl) || *pImpl == *other.pImpl;
 }
-std::string PriorityQueue::ToString() const {
-    return pImpl->ToString();
+std::string PriorityQueue::toString() const {
+    return pImpl->toString();
 }
 }
