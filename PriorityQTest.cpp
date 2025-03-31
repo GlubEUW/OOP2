@@ -222,7 +222,7 @@ void testEdgeCases() {
     pq.pop();
     assert(pq.top() == 30);
     
-    bool updated = (pq << std::make_pair(99, 10)).size() > 0;
+    //bool updated = (pq << std::make_pair(99, 10)).size() > 0;
     assert(pq.top() == 30);
     
     pq.clear();

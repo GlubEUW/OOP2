@@ -12,20 +12,20 @@ int main() {
     cout << "Created a new priority queue: " << pq.ToString() << endl;
 
     cout << "\n1. Adding elements with different priorities:" << endl;
-    pq.push(100, 3);  // Value 100 with priority 3
-    pq.push(200, 5);  // Value 200 with priority 5
-    pq.push(300, 1);  // Value 300 with priority 1
+    pq.push(100, 3);
+    pq.push(200, 5);
+    pq.push(300, 1);
     cout << "Queue after adding elements: " << pq.ToString() << endl;
     cout << "Top element: " << pq.top() << " with weight: " << pq.topWeight() << endl;
 
     cout << "\n2. Using operator overloads:" << endl;
-    pq += make_pair(400, 7);  // Using += to add element
+    pq += make_pair(400, 7);
     cout << "After adding 400 with weight 7: " << pq.ToString() << endl;
     
     cout << "Position of value 200: " << pq[200] << endl;
     cout << "Position of value 999 (not in queue): " << pq[999] << endl;
     
-    pq << make_pair(250, 5);  // Change value with weight 5 from 200 to 250
+    pq << make_pair(250, 5);
     cout << "After updating value with weight 5: " << pq.ToString() << endl;
 
     cout << "\n3. Creating a copy using copy constructor:" << endl;
