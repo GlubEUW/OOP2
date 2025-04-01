@@ -1,0 +1,10 @@
+Running PriorityQueue tests...
+Empty queue tests: PASSED
+Push and top tests: PASSED
+Priority ordering tests: PASSED
+Pop tests: PASSED
+Exception tests: PASSED
+Copy constructor tests: PASSED
+Clear tests: PASSED
+Operator overload tests: PASSED
+Assertion failed: pq1 != pq2, file PriorityQTest.cpp, line 139
