@@ -3,12 +3,9 @@
 
 namespace myNamespace {
 
-    class EmptyQueueException : public std::exception {
-        public:
-            const char* what() const noexcept override{
-                return "Priority queue is empty";
-            }
-        };
+    const char* EmptyQueueException::what() const noexcept {
+        return "Attempted to access an empty queue";
+    }
 
 
     

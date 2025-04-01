@@ -14,10 +14,9 @@
 
 namespace myNamespace {
 class EmptyQueueException : public std::exception {
-public:
-    const char* what() const noexcept override{
-    }
-};
+    public:
+        const char* what() const noexcept override;
+    };
 
 class PriorityQueue {
     private:

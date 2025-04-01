@@ -129,12 +129,14 @@ void testComparisonOperators() {
     PriorityQueue pq2;
     
     assert(pq1 == pq2);
+
     assert(!(pq1 < pq2));
     assert(pq1 <= pq2);
     assert(pq1 >= pq2);
     
     pq1.push(10, 5);
     assert(!(pq1 == pq2));
+    assert(pq1 != pq2);
     assert(!(pq1 < pq2));
     assert(!(pq1 <= pq2));
     assert(pq1 > pq2);
@@ -193,14 +195,14 @@ void testMultipleObjects() {
 void testToString() {
     PriorityQueue pq;
     
-    std::string emptyStr = pq.ToString();
+    std::string emptyStr = pq.toString();
     assert(emptyStr == "Empty Queue");
     
     pq.push(10, 5);
     pq.push(20, 8);
     pq.push(30, 3);
     
-    std::string str = pq.ToString();
+    std::string str = pq.toString();
     assert(str.find("PriorityQueue:") != std::string::npos);
     assert(str.find("[20:8]") != std::string::npos);
     assert(str.find("[10:5]") != std::string::npos);
