@@ -192,7 +192,7 @@ void testMultipleObjects() {
     printTestResult("Multiple objects tests", true);
 }
 
-void testToString() {
+void testtoString() {
     PriorityQueue pq;
     
     std::string emptyStr = pq.toString();
@@ -208,7 +208,7 @@ void testToString() {
     assert(str.find("[10:5]") != std::string::npos);
     assert(str.find("[30:3]") != std::string::npos);
     
-    printTestResult("ToString tests", true);
+    printTestResult("toString tests", true);
 }
 
 void testEdgeCases() {
@@ -257,7 +257,7 @@ int main() {
         testOperators();
         testComparisonOperators();
         testMultipleObjects();
-        testToString();
+        testtoString();
         testEdgeCases();
     
         std::cout << "All tests completed successfully!" << std::endl;
