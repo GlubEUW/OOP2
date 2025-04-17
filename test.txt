@@ -7,4 +7,8 @@ Exception tests: PASSED
 Copy constructor tests: PASSED
 Clear tests: PASSED
 Operator overload tests: PASSED
-Assertion failed: pq1 != pq2, file PriorityQTest.cpp, line 139
+Comparison operator tests: PASSED
+Multiple objects tests: PASSED
+toString tests: PASSED
+Edge case tests: PASSED
+All tests completed successfully!
